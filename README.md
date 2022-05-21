@@ -1,15 +1,21 @@
 # TMDB visualization
 Explore:
-1. genres
+1. General
 
-    1.1. Word Cloud
+    1.1. Number of films per year
+
+    1.2. Number of films per year created by different countries (animation ?)
+
+    1.3. Top movies by year (+ text labels to data points)
+
+2. Genres
+
+    2.1. Word Cloud for each genre
     
-    1.2. Genres popularity over time
+    2.2. Genres popularity over time
 
-2. budget - revenue
+3. Budget - revenue
 
-    2.1. Costs and Revenue over years
+    3.1. Costs and Revenue over years
 
-3. ratings
-
-4. smth else ?
+    3.2 Most profitable movies
