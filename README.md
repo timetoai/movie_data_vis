@@ -1,4 +1,7 @@
 # TMDB visualization
+
+Data visualization of movie dataset https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset.
+
 Explore:
 1. General
 
