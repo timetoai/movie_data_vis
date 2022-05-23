@@ -1,3 +1,20 @@
+function overlay(e) {
+    if (e.data.on == true)
+    {
+        $("#overlay_img")[0].src = e.target.src;
+        $("#overlay")[0].style.display = "block";
+    }
+    else
+    {
+        $("#overlay")[0].style.display = "none";
+    }
+}
+
+$(document).ready(function() {
+    $('.tile').click({on: true}, overlay);
+    $("#overlay").click({on: false}, overlay);
+});
+
 $(function() {
     var selectedClass = "";
     $(".fil-cat").click(function() {
