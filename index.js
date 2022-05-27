@@ -1,30 +1,29 @@
-function overlay(e) {
-    if (e.data.on == true)
-    {
-        $("#overlay_img")[0].src = e.target.src;
-        $("#overlay")[0].style.display = "block";
-    }
-    else
-    {
-        $("#overlay")[0].style.display = "none";
-    }
-}
+function draw_budget_revenue()
+{
+    ;
+};
 
-$(document).ready(function() {
-    $('.tile').click({on: true}, overlay);
-    $("#overlay").click({on: false}, overlay);
-});
+function draw_genres()
+{
+    ;
+};
 
 $(function() {
-    var selectedClass = "";
-    $(".fil-cat").click(function() {
-        selectedClass = $(this).attr("data-rel");
-        $("#portfolio").fadeTo(100, 0.1);
-        $("#portfolio div").not("." + selectedClass).fadeOut().removeClass('scale-anm');
-        setTimeout(function() {
-            $("." + selectedClass).fadeIn().addClass('scale-anm');
-            $("#portfolio").fadeTo(300, 1);
-        }, 300);
+    //initially drawing budget and revenue graph
+    draw_budget_revenue();
 
+    $(".fil-cat").click(function() {
+        // cleaning previous graphs
+        for (var child in $("#content")[0].children) 
+        {
+            $(child).fadeOut();
+        }
+        $("#content").empty();
+
+        // drawing new graphs
+        if ($(this).attr("data-rel") == "budget_revenue")
+            draw_budget_revenue();
+        else
+            draw_genres();
     });
 });

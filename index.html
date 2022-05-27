@@ -5,7 +5,6 @@
     <title>Movies Data Visualization</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="index.js"></script>
-    <script src="app.coffee"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="Figures/film-icon3.jpg" type="image/x-icon">
 </head>
@@ -16,72 +15,16 @@
     <h1>Movies Data Visualization</h1>
 
     <div class="toolbar mb2 mt2">
-        <button class="btn fil-cat" href="" data-rel="all">All</button>
-        <button class="btn fil-cat" data-rel="general">General</button>
+        <button class="btn fil-cat" href="" data-rel="budget_revenue">Budget and revenue</button>
         <button class="btn fil-cat" data-rel="genres">Genres</button>
-        <button class="btn fil-cat" data-rel="budget">Budget</button>
-        <button class="btn fil-cat" data-rel="other">Other</button>
     </div>
 
     <div id="overlay">
         <img id="overlay_img"></img>
     </div>
 
-    <div id="portfolio">
-        <div class="tile scale-anm genres all">
-            <img src="Figures/WC_SciFi.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm genres all">
-            <img src="Figures/WC_Animation.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm genres all">
-            <img src="Figures/WC_Comedy.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm genres all">
-            <img src="Figures/WC_History.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm genres all">
-            <img src="Figures/WC_Horror.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm genres all">
-            <img src="Figures/WC_Romance.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm budget all">
-            <img src="Figures/Companies_Prod_Revenue_Budget_Rating_Count.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm budget all">
-            <img src="Figures/Costs_Revenue_Year.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm genres all">
-            <img src="Figures/Genres_Popularity_Year.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm genres all">
-            <img src="Figures/Genres_Rate_Year.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm other all">
-            <img src="Figures/Lang_NFilms.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm other all">
-            <img src="Figures/Lang_Years_NFilms.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm budget all">
-            <img src="Figures/Most_Profit_Films_Rating.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm general all">
-            <img src="Figures/N_Films_p_Year.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm general all">
-            <img src="Figures/N_Films_p_Year_by_Countries.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm other all">
-            <img src="Figures/NFilms_Company_Year.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm other all">
-            <img src="Figures/Rating_density_Year.png" alt="" id="zoom" />
-        </div>
-        <div class="tile scale-anm general all">
-            <img src="Figures/TopFilms_Votes_Runtime_Budget_Revenue_Bubbles.png" alt="" id="zoom" />
-        </div>
+    <div id="content">
+        
     </div>
 
     <div style="clear:both;"></div>
