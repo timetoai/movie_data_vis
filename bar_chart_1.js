@@ -1,6 +1,6 @@
 $(function() {
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 30, bottom: 20, left: 50 },
+    var margin = { top: 10, right: 30, bottom: 20, left: 70 },
         width = 1200 - margin.left - margin.right,
         height = 700 - margin.top - margin.bottom;
 
@@ -43,6 +43,9 @@ $(function() {
     var mouseleave = function(d) {
         tooltip
             .style("opacity", 0)
+    }
+    var mouseclick = function(d) {
+
     }
 
     // Parse the Data
@@ -141,10 +144,12 @@ $(function() {
             .on("mouseover", mouseover)
             .on("mousemove", mousemove)
             .on("mouseleave", mouseleave)
+            .on("click", mouseclick);
 
-        bars.transition().duration(750)
+        bars.transition().duration(800)
             .attr("y", d => y(d[1]))
-            .attr("height", d => Math.abs(y(d[0])) - y(d[1]));
+            .attr("height", d => Math.abs(y(d[0])) - y(d[1]))
+            .delay(function(d, i) { console.log(i); return (i * 100) });
 
         svg.selectAll(".x-axis").transition().duration(750)
             .attr("transform", "translate(0," + y(0) + ")")
@@ -162,96 +167,6 @@ $(function() {
         }
 
 
-
-
-
-        /*
-        // Add X axis
-        var x = d3.scaleBand()
-            .domain(groups)
-            .range([0, width])
-            .padding([0.2])
-        svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).tickSizeOuter(0));
-
-        // Add Y axis
-        var y = d3.scaleLinear()
-            .domain([-100000000, 100000000])
-            .range([height, 0]);
-        svg.append("g")
-            .call(d3.axisLeft(y));
-
-        // color palette = one color per subgroup
-        var color = d3.scaleOrdinal()
-            .domain(subgroups)
-            .range(['#C7EFCF', '#EEF5DB'])
-
-        //stack the data? --> stack per subgroup
-        var stackedData = d3.stack()
-            .keys(["budget", "revenue"])
-            .offset(d3.stackOffsetDiverging)
-            (subgroups);
-
-        //console.log(JSON.stringify(stackedData, null, 4));
-        console.log(subgroups);
-        console.log(stackedData);
-
-
-        // ----------------
-        // Create a tooltip
-        // ----------------
-        var tooltip = d3.select("#bar_chart_cost_rev")
-            .append("div")
-            .style("opacity", 0)
-            .attr("class", "tooltip")
-            .style("background-color", "white")
-            .style("border", "solid")
-            .style("border-width", "1px")
-            .style("border-radius", "5px")
-            .style("padding", "10px")
-
-        // Three function that change the tooltip when user hover / move / leave a cell
-        var mouseover = function(d) {
-            var subgroupName = d3.select(this.parentNode).datum().key;
-            var subgroupValue = d.data[subgroupName];
-            tooltip
-                .html("subgroup: " + subgroupName + "<br>" + "Value: " + subgroupValue)
-                .style("opacity", 1)
-        }
-        var mousemove = function(d) {
-            tooltip
-                .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-                .style("top", (d3.mouse(this)[1]) + "px")
-        }
-        var mouseleave = function(d) {
-            tooltip
-                .style("opacity", 0)
-        }
-
-
-
-
-        // Show the bars
-        svg.append("g")
-            .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
-            .data(stackedData)
-            .enter().append("g")
-            .attr("fill", function(d) { return color(d.key); })
-            .selectAll("rect")
-            // enter a second time = loop subgroup per subgroup to add all rectangles
-            .data(function(d) { return d; })
-            .enter().append("rect")
-            .attr("x", function(d) { return x(d.subgroups.year); })
-            .attr("y", function(d) { return y(d[1]); })
-            .attr("height", function(d) { return Math.abs(y(d[0]) - y(d[1])); })
-            .attr("width", x.bandwidth())
-            .attr("stroke", "grey")
-            .on("mouseover", mouseover)
-            .on("mousemove", mousemove)
-            .on("mouseleave", mouseleave)
-        */
     });
 
 });
