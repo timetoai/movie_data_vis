@@ -46,7 +46,7 @@ $(function() {
     }
 
     // Parse the Data
-    d3.csv("movies_metadata_clean.csv", function(data) {
+    d3.csv("data/movies_metadata_clean.csv", function(data) {
 
         data.forEach(function(d) { d['budget'] = +d['budget']; });
         data.forEach(function(d) { d['revenue'] = +d['revenue']; });
