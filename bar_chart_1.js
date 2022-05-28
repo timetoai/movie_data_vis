@@ -50,11 +50,13 @@ $(function() {
 
         if (isOnStartChart) {
             file_path = "data/top_films_" + String(d.data['year']) + ".csv"
-            update(file_path)
             isOnStartChart = false;
+            update(file_path)
+
         } else {
-            update("data/movies_metadata_clean.csv")
             isOnStartChart = true;
+            update("data/movies_metadata_clean.csv")
+
         }
     }
 
@@ -84,6 +86,37 @@ $(function() {
     function update(file_name) {
         // Parse the Data
         d3.selectAll('.rect').remove();
+
+        if (!isOnStartChart) {
+            var mouseover = function(d) {
+
+                var title = d.data.title;
+                var date = d.data.date;
+                var budget = d.data.budget;
+                var revenue = d.data.revenue;
+                var profit = d.data.profit;
+                var country = d.data.country;
+                var vote_count = d.data.vote_count;
+                var vote_average = d.data.vote_average;
+
+                tooltip
+                    .html("Title: " + title + "<br>" + "Budget: " + budget + "$" + "<br>" +
+                        "Revenue: " + revenue + "$" + "<br>" + "Profit: " + profit + "$" + "<br>" +
+                        "Rating: " + vote_average + "<br>" + "Votes Number: " + vote_count + "<br>" +
+                        "Country: " + country + "<br>" + "Release date: " + date + "<br>")
+                    .style("opacity", 1)
+            }
+        } else {
+            var mouseover = function(d) {
+
+                var subgroupName = d3.select(this.parentNode).datum().key;
+                var subgroupValue = d.data[subgroupName];
+                var year = d.data.year;
+                tooltip
+                    .html("Year = " + year + "<br>" + subgroupName + " = " + subgroupValue)
+                    .style("opacity", 1)
+            }
+        }
 
         d3.csv(file_name, function(data) {
             subgroups = 0;
