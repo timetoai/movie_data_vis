@@ -1,16 +1,23 @@
-function draw_budget_revenue()
+import addRealTimeChart from './realTimeChart.js';
+
+
+function drawBudgetRevenue()
 {
     ;
 };
 
-function draw_genres()
+function drawGenre()
 {
-    ;
+    var genre = "Comedy";
+    d3.json("data/genres_" + genre + "_rates.json", function(data) {
+        data = JSON.parse(data);
+        addRealTimeChart(data, 400, 600, 250);
+    });
 };
 
 $(function() {
     //initially drawing budget and revenue graph
-    draw_budget_revenue();
+    drawBudgetRevenue();
 
     $(".fil-cat").click(function() {
         // cleaning previous graphs
@@ -20,10 +27,10 @@ $(function() {
         }
         $("#content").empty();
 
-        // drawing new graphs
+        // drawing new
         if ($(this).attr("data-rel") == "budget_revenue")
-            draw_budget_revenue();
+            drawBudgetRevenue();
         else
-            draw_genres();
+            drawGenre();
     });
 });

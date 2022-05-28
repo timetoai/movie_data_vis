@@ -54,6 +54,19 @@ p:hover {
     box-shadow: 0 0 0 3px var(--darken-3);
 }
 
+#content {
+    width: 100%;
+}
+
+.x.axis path, .x.axis line {
+    fill: none;
+    stroke: none;
+}
+
+g {
+    font: 14px times;
+}
+
 ::-moz-focus-inner {
     border: 0;
     padding: 0;
