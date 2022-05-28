@@ -31,8 +31,9 @@ $(function() {
     var mouseover = function(d) {
         var subgroupName = d3.select(this.parentNode).datum().key;
         var subgroupValue = d.data[subgroupName];
+        var year = d.data.year;
         tooltip
-            .html("subgroup: " + subgroupName + "<br>" + "Value: " + subgroupValue)
+            .html("Year = " + year + "<br>" + subgroupName + " = " + subgroupValue)
             .style("opacity", 1)
     }
     var mousemove = function(d) {
@@ -44,129 +45,176 @@ $(function() {
         tooltip
             .style("opacity", 0)
     }
+    var isOnStartChart = true;
     var mouseclick = function(d) {
+
+        if (isOnStartChart) {
+            file_path = "data/top_films_" + String(d.data['year']) + ".csv"
+            update(file_path)
+            isOnStartChart = false;
+        } else {
+            update("data/movies_metadata_clean.csv")
+            isOnStartChart = true;
+        }
 
     }
 
-    // Parse the Data
-    d3.csv("data/movies_metadata_clean.csv", function(data) {
+    var x = d3.scaleBand()
+        .rangeRound([0, width])
+        .padding(0.2);
 
-        data.forEach(function(d) { d['budget'] = +d['budget']; });
-        data.forEach(function(d) { d['revenue'] = +d['revenue']; });
-        data.forEach(function(d) { d['year'] = +d['year']; });
+    var xAxis = svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
 
-        data = data.sort(function(a, b) { return +a.year - +b.year })
+    var y = d3.scaleLinear()
+        .rangeRound([height, 0]);
 
-        // Calculate the sums and group data (while tracking count)
-        const reduced = data.reduce(function(m, d) {
-            if (!m[d.year]) {
-                m[d.year] = {...d, count: 1 };
-                return m;
+    var yAxis = svg.append("g")
+        .attr("class", "myYaxis")
+
+    var z = d3.scaleOrdinal()
+        .range(["steelblue", "darkorange"]);
+
+    svg.append("g")
+        .attr("class", "x-axis");
+
+    svg.append("g")
+        .attr("class", "y-axis");
+
+
+    function update(file_name) {
+        // Parse the Data
+        d3.csv(file_name, function(data) {
+            subgroups = 0;
+
+            if (isOnStartChart) {
+                data.forEach(function(d) { d['budget'] = +d['budget']; });
+                data.forEach(function(d) { d['revenue'] = +d['revenue']; });
+                data.forEach(function(d) { d['year'] = +d['year']; });
+
+                data = data.sort(function(a, b) { return +a.year - +b.year })
+
+                // Calculate the sums and group data (while tracking count)
+                const reduced = data.reduce(function(m, d) {
+                    if (!m[d.year]) {
+                        m[d.year] = {...d, count: 1 };
+                        return m;
+                    }
+                    m[d.year].budget += d.budget;
+                    m[d.year].revenue += d.revenue;
+                    m[d.year].count += 1;
+                    return m;
+                }, {});
+
+                // Create new array from grouped data and compute the average
+                subgroups = Object.keys(reduced).map(function(k) {
+                    const item = reduced[k];
+                    return {
+                        year: item.year,
+                        budget: -item.budget / item.count,
+                        revenue: item.revenue / item.count,
+                    }
+                })
+            } else {
+                subgroups = data.map(function(k) {
+                    return {
+                        title: k.title,
+                        budget: -k.budget,
+                        revenue: k.revenue,
+                        country: k.production_countries,
+                        vote_count: k.vote_count,
+                        vote_average: k.vote_average,
+                        profit: k.profit,
+                        date: k.release_date,
+                    }
+                })
             }
-            m[d.year].budget += d.budget;
-            m[d.year].revenue += d.revenue;
-            m[d.year].count += 1;
-            return m;
-        }, {});
 
-        // Create new array from grouped data and compute the average
-        const subgroups = Object.keys(reduced).map(function(k) {
-            const item = reduced[k];
-            return {
-                year: item.year,
-                budget: -item.budget / item.count,
-                revenue: item.revenue / item.count,
+
+            console.log(subgroups);
+            //console.log((subgroups.map(d => d.year)));
+
+
+
+
+
+
+
+            var keys = ["budget", "revenue"];
+
+            var series = d3.stack()
+                .keys(keys)
+                .offset(d3.stackOffsetDiverging)
+                (subgroups);
+
+            if (isOnStartChart) {
+                x.domain(subgroups.map(d => d.year));
+            } else {
+                x.domain(subgroups.map(d => d.title));
             }
-        })
+            //xAxis.call(d3.axisBottom(x))
 
-        //console.log(subgroups);
-        //console.log((subgroups.map(d => d.year)));
+            y.domain([
+                d3.min(series, stackMin),
+                d3.max(series, stackMax)
+            ]).nice();
+            yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
-        // List of groups = species here = value of the first column called group -> I show them on the X axis
-        var groups = d3.map(subgroups, function(d) { return (d.year) }).keys();
+            var barGroups = svg.selectAll("g.layer")
+                .data(series);
 
+            barGroups.exit().remove();
 
-        var x = d3.scaleBand()
-            .rangeRound([0, width])
-            .padding(0.2);
+            barGroups.enter().insert("g", ".x-axis")
+                .classed('layer', true);
 
-        var y = d3.scaleLinear()
-            .rangeRound([height, 0]);
+            svg.selectAll("g.layer")
+                .transition().duration(750)
+                .attr("fill", d => z(d.key));
 
-        var z = d3.scaleOrdinal()
-            .range(["steelblue", "darkorange"]);
+            var bars = svg.selectAll("g.layer").selectAll("rect")
+                .data(function(d) { return d; });
 
-        svg.append("g")
-            .attr("class", "x-axis");
+            bars.exit().remove();
 
-        svg.append("g")
-            .attr("class", "y-axis");
+            bars = bars
+                .enter()
+                .append("rect")
+                .attr("width", x.bandwidth())
+                .attr("x", d => x(isOnStartChart ? d.data.year : d.data.title))
+                .merge(bars)
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave)
+                .on("click", mouseclick)
 
+            bars.transition().duration(800)
+                .attr("y", d => y(d[1]))
+                .attr("height", d => Math.abs(y(d[0])) - y(d[1]))
+                .delay(function(d, i) { console.log(i); return (i * 100) });
 
+            svg.selectAll(".x-axis").transition().duration(750)
+                .attr("transform", "translate(0," + y(0) + ")")
+                .call(d3.axisBottom(x));
 
-        var keys = ["budget", "revenue"];
+            svg.selectAll(".y-axis").transition().duration(750)
+                .call(d3.axisLeft(y));
 
-        var series = d3.stack()
-            .keys(keys)
-            .offset(d3.stackOffsetDiverging)
-            (subgroups);
+            function stackMin(series) {
+                return d3.min(series, function(d) { return d[0]; });
+            }
 
-        x.domain(subgroups.map(d => d.year));
+            function stackMax(series) {
+                return d3.max(series, function(d) { return d[1]; });
+            }
 
-        y.domain([
-            d3.min(series, stackMin),
-            d3.max(series, stackMax)
-        ]).nice();
+            bars
+                .exit()
+                .remove()
 
-        var barGroups = svg.selectAll("g.layer")
-            .data(series);
+        });
+    }
+    update("data/movies_metadata_clean.csv")
 
-        barGroups.exit().remove();
-
-        barGroups.enter().insert("g", ".x-axis")
-            .classed('layer', true);
-
-        svg.selectAll("g.layer")
-            .transition().duration(750)
-            .attr("fill", d => z(d.key));
-
-        var bars = svg.selectAll("g.layer").selectAll("rect")
-            .data(function(d) { return d; });
-
-        bars.exit().remove();
-
-        bars = bars
-            .enter()
-            .append("rect")
-            .attr("width", x.bandwidth())
-            .attr("x", d => x(d.data.year))
-            .merge(bars)
-            .on("mouseover", mouseover)
-            .on("mousemove", mousemove)
-            .on("mouseleave", mouseleave)
-            .on("click", mouseclick);
-
-        bars.transition().duration(800)
-            .attr("y", d => y(d[1]))
-            .attr("height", d => Math.abs(y(d[0])) - y(d[1]))
-            .delay(function(d, i) { console.log(i); return (i * 100) });
-
-        svg.selectAll(".x-axis").transition().duration(750)
-            .attr("transform", "translate(0," + y(0) + ")")
-            .call(d3.axisBottom(x));
-
-        svg.selectAll(".y-axis").transition().duration(750)
-            .call(d3.axisLeft(y));
-
-        function stackMin(series) {
-            return d3.min(series, function(d) { return d[0]; });
-        }
-
-        function stackMax(series) {
-            return d3.max(series, function(d) { return d[1]; });
-        }
-
-
-    });
 
 });
