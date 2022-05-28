@@ -56,7 +56,6 @@ $(function() {
             update("data/movies_metadata_clean.csv")
             isOnStartChart = true;
         }
-
     }
 
     var x = d3.scaleBand()
@@ -84,6 +83,8 @@ $(function() {
 
     function update(file_name) {
         // Parse the Data
+        d3.selectAll('.rect').remove();
+
         d3.csv(file_name, function(data) {
             subgroups = 0;
 
@@ -131,13 +132,8 @@ $(function() {
             }
 
 
-            console.log(subgroups);
+            //console.log(subgroups);
             //console.log((subgroups.map(d => d.year)));
-
-
-
-
-
 
 
             var keys = ["budget", "revenue"];
@@ -158,7 +154,6 @@ $(function() {
                 d3.min(series, stackMin),
                 d3.max(series, stackMax)
             ]).nice();
-            yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
             var barGroups = svg.selectAll("g.layer")
                 .data(series);
@@ -180,18 +175,21 @@ $(function() {
             bars = bars
                 .enter()
                 .append("rect")
-                .attr("width", x.bandwidth())
                 .attr("x", d => x(isOnStartChart ? d.data.year : d.data.title))
+                .attr("width", x.bandwidth())
                 .merge(bars)
                 .on("mouseover", mouseover)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
                 .on("click", mouseclick)
 
+
             bars.transition().duration(800)
                 .attr("y", d => y(d[1]))
+                .attr("x", d => x(isOnStartChart ? d.data.year : d.data.title))
                 .attr("height", d => Math.abs(y(d[0])) - y(d[1]))
-                .delay(function(d, i) { console.log(i); return (i * 100) });
+                .attr("width", d => x.bandwidth())
+                .delay(function(d, i) { return (i * 100) });
 
             svg.selectAll(".x-axis").transition().duration(750)
                 .attr("transform", "translate(0," + y(0) + ")")
