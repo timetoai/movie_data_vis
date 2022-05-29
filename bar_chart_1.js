@@ -1,8 +1,8 @@
 export default function addBarChartCR() {
     // set the dimensions and margins of the graph
-    var margin = { top: 80, right: 10, bottom: 200, left: 160 },
+    var margin = { top: 80, right: 80, bottom: 180, left: 160 },
         width = 1500 - margin.left - margin.right,
-        height = 900 - margin.top - margin.bottom;
+        height = 600 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select("#bar_chart_cost_rev")
@@ -127,7 +127,7 @@ export default function addBarChartCR() {
                 var subgroupValue = Math.round(d.data[subgroupName]);
                 var year = d.data.year;
                 tooltip
-                    .html("Year = " + year + "<br>" + subgroupName + " = " + subgroupValue + " $")
+                    .html("Year: " + year + "<br>" + subgroupName + ": " + subgroupValue + " $")
                     .style("opacity", 1)
                     .style("font-size", "19px")
             }
