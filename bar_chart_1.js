@@ -2,7 +2,7 @@ export default function addBarChartCR() {
     // set the dimensions and margins of the graph
     var margin = { top: 80, right: 10, bottom: 200, left: 160 },
         width = 1500 - margin.left - margin.right,
-        height = 700 - margin.top - margin.bottom;
+        height = 900 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select("#bar_chart_cost_rev")
@@ -59,7 +59,7 @@ export default function addBarChartCR() {
     var mouseclick = function(d) {
 
         if (isOnStartChart) {
-            file_path = "data/top_films_" + String(d.data['year']) + ".csv"
+            var file_path = "data/top_films_" + String(d.data['year']) + ".csv"
             isOnStartChart = false;
             update(file_path)
 
@@ -134,7 +134,7 @@ export default function addBarChartCR() {
         }
 
         d3.csv(file_name, function(data) {
-            subgroups = 0;
+            var subgroups = 0;
             svg.selectAll(".chart_title").remove();
             svg.selectAll(".x_title").remove();
             svg.selectAll(".y_title").remove();
