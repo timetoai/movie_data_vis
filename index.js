@@ -16,6 +16,7 @@ function drawGenre()
 
     d3.json("data/genre_names.json", function(data) {
         let selector = $("#content_selector");
+        data.sort();
         for (let genre of data)
         {
             selector.append("<button genre=\"" + genre + "\" class=\"btn_genre\">" + genre + "</button>");
