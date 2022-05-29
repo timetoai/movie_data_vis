@@ -50,13 +50,14 @@ $(function() {
 
         if (isOnStartChart) {
             file_path = "data/top_films_" + String(d.data['year']) + ".csv"
-            update(file_path)
             isOnStartChart = false;
-        } else {
-            update("data/movies_metadata_clean.csv")
-            isOnStartChart = true;
-        }
+            update(file_path)
 
+        } else {
+            isOnStartChart = true;
+            update("data/movies_metadata_clean.csv")
+
+        }
     }
 
     var x = d3.scaleBand()
@@ -84,6 +85,39 @@ $(function() {
 
     function update(file_name) {
         // Parse the Data
+        d3.selectAll('.rect').remove();
+
+        if (!isOnStartChart) {
+            var mouseover = function(d) {
+
+                var title = d.data.title;
+                var date = d.data.date;
+                var budget = d.data.budget;
+                var revenue = d.data.revenue;
+                var profit = d.data.profit;
+                var country = d.data.country;
+                var vote_count = d.data.vote_count;
+                var vote_average = d.data.vote_average;
+
+                tooltip
+                    .html("Title: " + title + "<br>" + "Budget: " + budget + "$" + "<br>" +
+                        "Revenue: " + revenue + "$" + "<br>" + "Profit: " + profit + "$" + "<br>" +
+                        "Rating: " + vote_average + "<br>" + "Votes Number: " + vote_count + "<br>" +
+                        "Country: " + country + "<br>" + "Release date: " + date + "<br>")
+                    .style("opacity", 1)
+            }
+        } else {
+            var mouseover = function(d) {
+
+                var subgroupName = d3.select(this.parentNode).datum().key;
+                var subgroupValue = d.data[subgroupName];
+                var year = d.data.year;
+                tooltip
+                    .html("Year = " + year + "<br>" + subgroupName + " = " + subgroupValue)
+                    .style("opacity", 1)
+            }
+        }
+
         d3.csv(file_name, function(data) {
             subgroups = 0;
 
@@ -131,13 +165,8 @@ $(function() {
             }
 
 
-            console.log(subgroups);
+            //console.log(subgroups);
             //console.log((subgroups.map(d => d.year)));
-
-
-
-
-
 
 
             var keys = ["budget", "revenue"];
@@ -158,7 +187,6 @@ $(function() {
                 d3.min(series, stackMin),
                 d3.max(series, stackMax)
             ]).nice();
-            yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
             var barGroups = svg.selectAll("g.layer")
                 .data(series);
@@ -180,18 +208,21 @@ $(function() {
             bars = bars
                 .enter()
                 .append("rect")
-                .attr("width", x.bandwidth())
                 .attr("x", d => x(isOnStartChart ? d.data.year : d.data.title))
+                .attr("width", x.bandwidth())
                 .merge(bars)
                 .on("mouseover", mouseover)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
                 .on("click", mouseclick)
 
+
             bars.transition().duration(800)
                 .attr("y", d => y(d[1]))
+                .attr("x", d => x(isOnStartChart ? d.data.year : d.data.title))
                 .attr("height", d => Math.abs(y(d[0])) - y(d[1]))
-                .delay(function(d, i) { console.log(i); return (i * 100) });
+                .attr("width", d => x.bandwidth())
+                .delay(function(d, i) { return (i * 100) });
 
             svg.selectAll(".x-axis").transition().duration(750)
                 .attr("transform", "translate(0," + y(0) + ")")
