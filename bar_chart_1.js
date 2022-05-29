@@ -1,14 +1,22 @@
 $(function() {
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 30, bottom: 20, left: 70 },
-        width = 1200 - margin.left - margin.right,
+    var margin = { top: 10, right: 10, bottom: 20, left: 120 },
+        width = 1500 - margin.left - margin.right,
         height = 700 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select("#bar_chart_cost_rev")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        //.attr("width", width + margin.left + margin.right)
+        //.attr("height", height + margin.top + margin.bottom)
+        .attr('preserveAspectRatio', 'xMinYMin meet')
+        .attr(
+            'viewBox',
+            '0 0 ' +
+            (width + margin.left + margin.right) +
+            ' ' +
+            (height + margin.top + margin.bottom)
+        )
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
@@ -35,6 +43,7 @@ $(function() {
         tooltip
             .html("Year = " + year + "<br>" + subgroupName + " = " + subgroupValue)
             .style("opacity", 1)
+
     }
     var mousemove = function(d) {
         tooltip
@@ -42,6 +51,7 @@ $(function() {
             .style("top", (d3.mouse(this)[1]) + "px")
     }
     var mouseleave = function(d) {
+        d3.select(this).attr("opacity", 1);
         tooltip
             .style("opacity", 0)
     }
@@ -74,7 +84,7 @@ $(function() {
         .attr("class", "myYaxis")
 
     var z = d3.scaleOrdinal()
-        .range(["steelblue", "darkorange"]);
+        .range(["darkorange", "steelblue"]);
 
     svg.append("g")
         .attr("class", "x-axis");
@@ -89,32 +99,37 @@ $(function() {
 
         if (!isOnStartChart) {
             var mouseover = function(d) {
+                d3.select(this).attr("opacity", 0.5)
 
                 var title = d.data.title;
                 var date = d.data.date;
-                var budget = d.data.budget;
-                var revenue = d.data.revenue;
-                var profit = d.data.profit;
+                var budget = Math.round(-d.data.budget);
+                var revenue = Math.round(d.data.revenue);
+                var profit = Math.round(d.data.profit);
                 var country = d.data.country;
-                var vote_count = d.data.vote_count;
+                var vote_count = Math.round(d.data.vote_count);
                 var vote_average = d.data.vote_average;
 
                 tooltip
-                    .html("Title: " + title + "<br>" + "Budget: " + budget + "$" + "<br>" +
-                        "Revenue: " + revenue + "$" + "<br>" + "Profit: " + profit + "$" + "<br>" +
+                    .html("Title: " + title + "<br>" + "Budget: " + budget + " $" + "<br>" +
+                        "Revenue: " + revenue + " $" + "<br>" + "Profit: " + profit + " $" + "<br>" +
                         "Rating: " + vote_average + "<br>" + "Votes Number: " + vote_count + "<br>" +
                         "Country: " + country + "<br>" + "Release date: " + date + "<br>")
                     .style("opacity", 1)
+                    .style("font-size", "19px")
+
             }
         } else {
             var mouseover = function(d) {
+                d3.select(this).attr("opacity", 0.55)
 
                 var subgroupName = d3.select(this.parentNode).datum().key;
-                var subgroupValue = d.data[subgroupName];
+                var subgroupValue = Math.round(d.data[subgroupName]);
                 var year = d.data.year;
                 tooltip
-                    .html("Year = " + year + "<br>" + subgroupName + " = " + subgroupValue)
+                    .html("Year = " + year + "<br>" + subgroupName + " = " + subgroupValue + " $")
                     .style("opacity", 1)
+                    .style("font-size", "19px")
             }
         }
 
@@ -226,9 +241,11 @@ $(function() {
 
             svg.selectAll(".x-axis").transition().duration(750)
                 .attr("transform", "translate(0," + y(0) + ")")
+                .style("font-size", "13px")
                 .call(d3.axisBottom(x));
 
             svg.selectAll(".y-axis").transition().duration(750)
+                .style("font-size", "18px")
                 .call(d3.axisLeft(y));
 
             function stackMin(series) {
