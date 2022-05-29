@@ -35,7 +35,11 @@ function drawSpecifiedGenre(event)
             $(elem).empty();
     });
 
-    var genre = event.target.getAttribute("genre"), monthInterval = 400,
+    //button style
+    $(".btn_genre").css({"background-color": "rgba(0,0,0,0)", "color": "#555"});
+    $(event.target).css({"background-color": "rgba(85,85,85,0.5)", "color": "#fff"});
+
+    var genre = event.target.getAttribute("genre"), monthInterval = 250,
         elem = d3.select("#content")._groups[0][0],
         width = elem.clientWidth, height = elem.clientHeight,
         rtcWidth = width * 0.8, rtcHeight = height * 0.30,
@@ -63,6 +67,10 @@ $(function() {
             $(child).fadeOut();
         }
         $("#content").empty();
+
+        // button style
+        $(".btn.fil-cat").css({"background-color": "rgba(0,0,0,0)", "color": "#555"});
+        $(this).css({"background-color": "rgba(85,85,85,0.5)", "color": "#fff"});
 
         // drawing new
         if ($(this).attr("data-rel") == "budget_revenue")

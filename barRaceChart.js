@@ -15,7 +15,7 @@ export default function addBarRaceChart(elem, data, duration, width, height)
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom);
 
-    let barPadding = (height-(margin.bottom+margin.top))/(n*5);
+    let barPadding = (height) / (n * 5);
 
     // let title = svg.append('text')
     //  .attr('class', 'title')
@@ -50,15 +50,15 @@ export default function addBarRaceChart(elem, data, duration, width, height)
          d.year = year; 
          d.colour = d3.hsl(Math.random()*360,0.75,0.75);
        });
-     console.log('yearSlice: ', yearSlice)
+    //  console.log('yearSlice: ', yearSlice);
   
     let x = d3.scaleLinear()
         .domain([0, d3.max(yearSlice, d => d.value)])
-        .range([margin.left, width + margin.right]);
+        .range([margin.left, width + margin.left]);
   
     let y = d3.scaleLinear()
         .domain([n, 0])
-        .range([height + margin.top + margin.bottom, margin.top]);
+        .range([height + margin.top, margin.top]);
   
     let xAxis = d3.axisTop()
         .scale(x)
@@ -138,7 +138,7 @@ export default function addBarRaceChart(elem, data, duration, width, height)
           d.colour = d3.hsl(Math.random()*360,0.75,0.75);
         });
       lstValues = nxtLstValues;
-      console.log('yearSlice: ', yearSlice)
+      console.log('yearSlice: ', yearSlice);
 
       x.domain([0, d3.max(yearSlice, d => d.value)]); 
      
