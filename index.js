@@ -4,8 +4,7 @@ import addBarChartCR from './bar_chart_1.js';
 
 
 function drawBudgetRevenue() {
-    $("#content").append("<div id=\"content1\"></div>");
-    $("#content1").append("<div id=\"bar_chart_cost_rev\"></div>");
+    $("#content").append("<div id=\"bar_chart_cost_rev\"></div>");
     addBarChartCR();
 };
 
