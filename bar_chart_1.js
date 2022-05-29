@@ -28,6 +28,8 @@ export default function addBarChartCR() {
     var tooltip = d3.select("#bar_chart_cost_rev")
         .append("div")
         .style("opacity", 0)
+        .style("width", "600px")
+        .style("column-count", 2)
         .attr("class", "tooltip")
         .style("background-color", "white")
         .style("border", "solid")
