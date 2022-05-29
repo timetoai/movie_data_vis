@@ -138,7 +138,7 @@ export default function addBarRaceChart(elem, data, duration, width, height)
           d.colour = d3.hsl(Math.random()*360,0.75,0.75);
         });
       lstValues = nxtLstValues;
-      console.log('yearSlice: ', yearSlice);
+      // console.log('yearSlice: ', yearSlice);
 
       x.domain([0, d3.max(yearSlice, d => d.value)]); 
      

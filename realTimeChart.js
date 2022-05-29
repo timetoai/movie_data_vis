@@ -113,12 +113,14 @@ export default function addRealTimeChart(elem, data, duration, width, height)
       else
       {
         // interpolating month's data
-        var nxtDate = new Date(data[i].ym), diff = mod((nxtDate.getMonth() - new Date(pdata[pdata.length - 1].ym).getMonth()), 12);
-        // console.log(diff, nxtDate, new Date(pdata[pdata.length - 1].ym));
-        var newObj = {"ym": nxtDate - year / 12 * (diff - 1), 
+        var nxtDate = new Date(pdata[pdata.length - 1].ym), 
+            diff = mod(((new Date(data[i].ym)).getMonth() - (new Date(pdata[pdata.length - 1].ym)).getMonth()), 12);
+        nxtDate.setMonth(nxtDate.getMonth() + 1);
+        if (nxtDate.getDate() != (new Date(pdata[pdata.length - 1].ym)).getDate()) nxtDate.setDate(0);
+        var newObj = {"ym": nxtDate, 
                       "rate": pdata[pdata.length - 1].rate + (data[i].rate - pdata[pdata.length - 1].rate) / diff}
-        // console.log(newObj);
         pdata.push(newObj);
+        // console.log("interpolating", pdata[pdata.length - 2], newObj, data[i], diff);
       }
       // update the domains
       if (pdata.length > 2)

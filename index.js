@@ -57,9 +57,6 @@ function drawSpecifiedGenre(event)
 };
 
 $(function() {
-    //initially drawing budget and revenue graph
-    drawBudgetRevenue();
-
     $(".fil-cat").click(function() {
         // cleaning previous graphs
         for (var child of $("#content")[0].children) 
@@ -78,4 +75,7 @@ $(function() {
         else
             drawGenre();
     });
+
+    //initially drawing budget and revenue graph
+    $(".btn.fil-cat")[0].click();
 });
