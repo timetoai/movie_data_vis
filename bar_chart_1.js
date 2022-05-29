@@ -1,6 +1,6 @@
 $(function() {
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 10, bottom: 20, left: 120 },
+    var margin = { top: 10, right: 10, bottom: 200, left: 120 },
         width = 1500 - margin.left - margin.right,
         height = 700 - margin.top - margin.bottom;
 
@@ -25,6 +25,7 @@ $(function() {
     // ----------------
     // Create a tooltip
     // ----------------
+    var svgContainer
     var tooltip = d3.select("#bar_chart_cost_rev")
         .append("div")
         .style("opacity", 0)
@@ -47,7 +48,7 @@ $(function() {
     }
     var mousemove = function(d) {
         tooltip
-            .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("left", (d3.mouse(this)[0] + 50) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
             .style("top", (d3.mouse(this)[1]) + "px")
     }
     var mouseleave = function(d) {
@@ -183,7 +184,6 @@ $(function() {
             //console.log(subgroups);
             //console.log((subgroups.map(d => d.year)));
 
-
             var keys = ["budget", "revenue"];
 
             var series = d3.stack()
@@ -241,8 +241,13 @@ $(function() {
 
             svg.selectAll(".x-axis").transition().duration(750)
                 .attr("transform", "translate(0," + y(0) + ")")
-                .style("font-size", "13px")
-                .call(d3.axisBottom(x));
+                .style("font-size", "15px")
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-65)");
 
             svg.selectAll(".y-axis").transition().duration(750)
                 .style("font-size", "18px")
