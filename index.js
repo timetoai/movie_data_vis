@@ -1,10 +1,12 @@
 import addRealTimeChart from './realTimeChart.js';
 import addBarRaceChart from './barRaceChart.js';
+import addBarChartCR from './bar_chart_1.js';
 
 
-function drawBudgetRevenue()
-{
-    ;
+function drawBudgetRevenue() {
+    $("#content").append("<div id=\"content1\"></div>");
+    $("#content1").append("<div id=\"bar_chart_cost_rev\"></div>");
+    addBarChartCR();
 };
 
 function drawGenre()
