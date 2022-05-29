@@ -1,6 +1,6 @@
 $(function() {
     // set the dimensions and margins of the graph
-    var margin = { top: 10, right: 10, bottom: 200, left: 120 },
+    var margin = { top: 80, right: 10, bottom: 200, left: 160 },
         width = 1500 - margin.left - margin.right,
         height = 700 - margin.top - margin.bottom;
 
@@ -25,7 +25,6 @@ $(function() {
     // ----------------
     // Create a tooltip
     // ----------------
-    var svgContainer
     var tooltip = d3.select("#bar_chart_cost_rev")
         .append("div")
         .style("opacity", 0)
@@ -48,7 +47,7 @@ $(function() {
     }
     var mousemove = function(d) {
         tooltip
-            .style("left", (d3.mouse(this)[0] + 50) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
             .style("top", (d3.mouse(this)[1]) + "px")
     }
     var mouseleave = function(d) {
@@ -136,6 +135,9 @@ $(function() {
 
         d3.csv(file_name, function(data) {
             subgroups = 0;
+            svg.selectAll(".chart_title").remove();
+            svg.selectAll(".x_title").remove();
+            svg.selectAll(".y_title").remove();
 
             if (isOnStartChart) {
                 data.forEach(function(d) { d['budget'] = +d['budget']; });
@@ -252,6 +254,34 @@ $(function() {
             svg.selectAll(".y-axis").transition().duration(750)
                 .style("font-size", "18px")
                 .call(d3.axisLeft(y));
+
+            svg.append("text")
+                .attr("class", "chart_title")
+                .attr("x", width / 2)
+                .attr("y", -20)
+                .attr("text-anchor", "middle")
+                .style("font-size", "32px")
+                .text(isOnStartChart ? "Films Budget / Revenue change over time" :
+                    "Top films of the year by profit");
+
+            svg.append("text")
+                .attr("class", "y_title")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -(width / 6))
+                .attr("y", -140)
+                .attr("text-anchor", "middle")
+                .style("font-size", "24px")
+                .text("Budget / Revenue, $");
+
+            if (isOnStartChart) {
+                svg.append("text")
+                    .attr("class", "x_title")
+                    .attr("x", width / 2)
+                    .attr("y", height)
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "24px")
+                    .text("Year");
+            }
 
             function stackMin(series) {
                 return d3.min(series, function(d) { return d[0]; });
